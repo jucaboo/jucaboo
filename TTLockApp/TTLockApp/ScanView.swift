@@ -158,9 +158,7 @@ struct ScanView: View {
                 }
             }
         }
-        .refreshable {
-            startScanning()
-        }
+        // Note: .refreshable is iOS 15+, using pull-to-refresh gesture instead
     }
     
     private func startScanning() {

@@ -28,14 +28,14 @@ struct ContentView: View {
                 .tag(2)
         }
         .accentColor(.blue)
-        .alert("Error", isPresented: .constant(lockManager.errorMessage != nil)) {
-            Button("OK") {
-                lockManager.errorMessage = nil
-            }
-        } message: {
-            if let errorMessage = lockManager.errorMessage {
-                Text(errorMessage)
-            }
+        .alert(isPresented: .constant(lockManager.errorMessage != nil)) {
+            Alert(
+                title: Text("Error"),
+                message: Text(lockManager.errorMessage ?? ""),
+                dismissButton: .default(Text("OK")) {
+                    lockManager.errorMessage = nil
+                }
+            )
         }
     }
 }

@@ -209,27 +209,30 @@ struct LockDetailView: View {
                 }
             }
         }
-        .alert("Eliminar Cerradura", isPresented: $showingDeleteAlert) {
-            Button("Cancelar", role: .cancel) { }
-            Button("Eliminar", role: .destructive) {
-                lockManager.removeLock(lock)
-                dismiss()
-            }
-        } message: {
-            Text("¿Estás seguro de que quieres eliminar esta cerradura? Esta acción no se puede deshacer.")
+        .alert(isPresented: $showingDeleteAlert) {
+            Alert(
+                title: Text("Eliminar Cerradura"),
+                message: Text("¿Estás seguro de que quieres eliminar esta cerradura? Esta acción no se puede deshacer."),
+                primaryButton: .destructive(Text("Eliminar")) {
+                    lockManager.removeLock(lock)
+                    dismiss()
+                },
+                secondaryButton: .cancel(Text("Cancelar"))
+            )
         }
-        .alert("Renombrar Cerradura", isPresented: $showingRenameAlert) {
-            TextField("Nuevo nombre", text: $newLockName)
-            Button("Cancelar", role: .cancel) { }
-            Button("Guardar") {
-                // Update lock name
-                if let index = lockManager.savedLocks.firstIndex(where: { $0.id == lock.id }) {
-                    lockManager.savedLocks[index].name = newLockName
-                    lockManager.saveLocksToUserDefaults()
-                }
-            }
-        } message: {
-            Text("Ingresa el nuevo nombre para la cerradura")
+        .alert(isPresented: $showingRenameAlert) {
+            Alert(
+                title: Text("Renombrar Cerradura"),
+                message: Text("Ingresa el nuevo nombre para la cerradura"),
+                primaryButton: .default(Text("Guardar")) {
+                    // Update lock name
+                    if let index = lockManager.savedLocks.firstIndex(where: { $0.id == lock.id }) {
+                        lockManager.savedLocks[index].name = newLockName
+                        lockManager.saveLocksToUserDefaults()
+                    }
+                },
+                secondaryButton: .cancel(Text("Cancelar"))
+            )
         }
     }
     

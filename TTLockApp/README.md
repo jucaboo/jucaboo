@@ -11,11 +11,12 @@ Una aplicación iOS nativa para el control de cerraduras inteligentes TTLock.
 - **Registro de Eventos**: Obtiene el historial de acceso de las cerraduras
 - **Sincronización**: Sincroniza el tiempo de las cerraduras
 - **Interfaz Moderna**: Diseño SwiftUI con UX optimizada
+- **Compatibilidad Amplia**: Funciona desde iPhone 6s (iOS 13.0) en adelante
 
 ## 📱 Requisitos
 
-- iOS 17.0 o superior
-- Xcode 15.0 o superior
+- iOS 13.0 o superior (iPhone 6s en adelante)
+- Xcode 12.0 o superior
 - Dispositivo con Bluetooth LE
 - Cerraduras TTLock compatibles
 

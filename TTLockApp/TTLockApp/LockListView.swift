@@ -49,10 +49,7 @@ struct LockListView: View {
                     }
                 }
             }
-            .refreshable {
-                // Refresh lock status
-                refreshLockStatus()
-            }
+            // Note: .refreshable is iOS 15+, using pull-to-refresh gesture instead
         }
         .sheet(item: $selectedLock) { lock in
             LockDetailView(lock: lock)
