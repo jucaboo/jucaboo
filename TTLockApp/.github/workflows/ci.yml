@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Select Xcode
+      run: sudo xcode-select -switch /Applications/Xcode_13.2.1.app
+
+    - name: Build
+      run: |
+        xcodebuild clean build \
+          -project TTLockApp.xcodeproj \
+          -scheme TTLockApp \
+          -destination 'platform=iOS Simulator,name=iPhone 13,OS=15.0' \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+
+    - name: Test
+      run: |
+        xcodebuild test \
+          -project TTLockApp.xcodeproj \
+          -scheme TTLockApp \
+          -destination 'platform=iOS Simulator,name=iPhone 13,OS=15.0' \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
