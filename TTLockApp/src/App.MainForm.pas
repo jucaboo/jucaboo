@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
   FMX.ListView, FMX.ListView.Types, FMX.Controls.Presentation, FMX.Layouts,
-  TTLock.TTLockModels, TTLock.ITTLockService, TTLock.TTLockServiceFactory;
+  TTLock.TTLockModels, TTLock.ITTLockService, TTLock.TTLockServiceFactory,
+  App.DoorForm;
 
 type
   TFormMain = class(TForm)
@@ -19,10 +20,12 @@ type
     LabelStatus: TLabel;
     FService: ITTLockService;
     procedure SetupUI;
+    function RequireAccessCode: Boolean;
     procedure HandleDeviceFound(const Device: TTTLockDevice);
     function GetSelectedDevice(out Device: TTTLockDevice): Boolean;
     procedure ButtonScanClick(Sender: TObject);
     procedure ButtonUnlockClick(Sender: TObject);
+    procedure ListViewItemClick(const Sender: TObject; const AItem: TListViewItem);
   public
     constructor Create(AOwner: TComponent); override;
   end;
@@ -38,6 +41,11 @@ constructor TFormMain.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   SetupUI;
+  if not RequireAccessCode then
+  begin
+    Application.Terminate;
+    Exit;
+  end;
   FService := TTTLockServiceFactory.CreateService;
   FService.SetOnDeviceFound(HandleDeviceFound);
   FService.Initialize('YOUR_TTLOCK_APP_ID', 'YOUR_TTLOCK_APP_SECRET');
@@ -78,6 +86,7 @@ begin
   ListViewDevices.Parent := Self;
   ListViewDevices.Align := TAlignLayout.Client;
   ListViewDevices.ItemAppearance := 'ListItem';
+  ListViewDevices.OnItemClick := ListViewItemClick;
 
   LabelStatus := TLabel.Create(Self);
   LabelStatus.Parent := Self;
@@ -86,6 +95,25 @@ begin
   LabelStatus.Margins.Rect := TRectF.Create(8, 4, 8, 8);
   LabelStatus.Text := 'Idle';
   LabelStatus.TextSettings.HorzAlign := TTextAlign.Center;
+end;
+
+function TFormMain.RequireAccessCode: Boolean;
+var
+  Code: string;
+  Attempts: Integer;
+begin
+  Result := False;
+  Attempts := 0;
+  while Attempts < 3 do
+  begin
+    Code := '';
+    if not InputQuery('Acceso', 'Ingrese su código de acceso', Code) then
+      Exit(False);
+    if Code = '1234' then
+      Exit(True);
+    Inc(Attempts);
+    ShowMessage('Código incorrecto. Intenta nuevamente.');
+  end;
 end;
 
 procedure TFormMain.ButtonScanClick(Sender: TObject);
@@ -136,6 +164,23 @@ begin
   Device.Rssi := 0;
   Device.IsConnected := False;
   Result := True;
+end;
+
+procedure TFormMain.ListViewItemClick(const Sender: TObject; const AItem: TListViewItem);
+var
+  Device: TTTLockDevice;
+  DoorForm: TFormDoor;
+begin
+  Device.Identifier := AItem.TagString;
+  Device.Name := AItem.Text;
+  Device.Rssi := 0;
+  Device.IsConnected := False;
+  DoorForm := TFormDoor.CreateWith(Self, FService, Device);
+  try
+    DoorForm.ShowModal;
+  finally
+    DoorForm.Free;
+  end;
 end;
 
 end.
