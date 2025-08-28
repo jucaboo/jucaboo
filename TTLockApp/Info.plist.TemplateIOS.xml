@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key>
+    <string>%AppName%</string>
+    <key>CFBundleIdentifier</key>
+    <string>%Identifier%</string>
+    <key>CFBundleVersion</key>
+    <string>%AppVersion%</string>
+    <key>CFBundleShortVersionString</key>
+    <string>%AppShortVersion%</string>
+
+    <!-- Bluetooth permissions -->
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Necesitamos Bluetooth para comunicarnos con la cerradura.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>La app usa Bluetooth para abrir puertas compatibles.</string>
+
+    <!-- Location (if SDK requires for BLE scanning) -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Se usa la ubicación para mejorar el escaneo BLE.</string>
+
+</dict>
+</plist>
